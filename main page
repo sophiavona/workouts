@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dumbbell Workout Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .exercise-name {
+            font-weight: bold;
+            background-color: #e3f2fd;
+        }
+        .weight-input, .reps-input {
+            width: 50px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .notes-input {
+            width: 150px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .date-input {
+            width: 100px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .workout-header {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .export-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .export-btn:hover {
+            background-color: #218838;
+        }
+        .progress-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .instructions {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏋️ Dumbbell Workout Tracker</h1>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong> Click on each workout day tab to log your sets, reps, and weights. Use the Export buttons to save your data as CSV files that can be opened in Excel.
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('day1')">Day 1: Push</div>
+            <div class="tab" onclick="showTab('day2')">Day 2: Pull + Legs</div>
+            <div class="tab" onclick="showTab('day3')">Day 3: Full Body</div>
+            <div class="tab" onclick="showTab('progress')">Progress Log</div>
+        </div>
+
+        <!-- Day 1: Push -->
+        <div id="day1" class="tab-content active">
+            <button class="export-btn" onclick="exportToCSV('day1-table', 'Day1_Push_Workout.csv')">Export Day 1 to CSV</button>
+            <table id="day1-table">
+                <tr class="workout-header">
+                    <td colspan="8">DAY 1: PUSH (Chest, Shoulders, Triceps)</td>
+                </tr>
+                <tr>
+                    <th>Exercise</th>
+                    <th>Target Sets</th>
+                    <th>Target Reps</th>
+                    <th>Weight (lbs)</th>
+                    <th>Set 1</th>
+                    <th>Set 2</th>
+                    <th>Set 3</th>
+                    <th>Set 4</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Chest Press (Floor)</td>
+                    <td>4</td>
+                    <td>12-15</td>
+                    <td><input type="number" class="weight-input" placeholder="15-20"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Shoulder Press</td>
+                    <td>4</td>
+                    <td>10-12</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Flyes</td>
+                    <td>3</td>
+                    <td>12-15</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Push-ups (Bodyweight)</td>
+                    <td>3</td>
+                    <td>8-15</td>
+                    <td>BW</td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Tricep Extensions</td>
+                    <td>3</td>
+                    <td>12-15</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Lateral Raises</td>
+                    <td>3</td>
+                    <td>15-20</td>
+                    <td><input type="number" class="weight-input" placeholder="10"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Day 2: Pull + Legs -->
+        <div id="day2" class="tab-content">
+            <button class="export-btn" onclick="exportToCSV('day2-table', 'Day2_Pull_Legs_Workout.csv')">Export Day 2 to CSV</button>
+            <table id="day2-table">
+                <tr class="workout-header">
+                    <td colspan="8">DAY 2: PULL + LEGS (Back, Biceps, Legs)</td>
+                </tr>
+                <tr>
+                    <th>Exercise</th>
+                    <th>Target Sets</th>
+                    <th>Target Reps</th>
+                    <th>Weight (lbs)</th>
+                    <th>Set 1</th>
+                    <th>Set 2</th>
+                    <th>Set 3</th>
+                    <th>Set 4</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Rows (Single Arm)</td>
+                    <td>4</td>
+                    <td>12-15 each</td>
+                    <td><input type="number" class="weight-input" placeholder="15-20"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Deadlifts</td>
+                    <td>4</td>
+                    <td>12-15</td>
+                    <td><input type="number" class="weight-input" placeholder="15-20"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Goblet Squats</td>
+                    <td>4</td>
+                    <td>15-20</td>
+                    <td><input type="number" class="weight-input" placeholder="15-20"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Bicep Curls</td>
+                    <td>3</td>
+                    <td>12-15</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Lunges</td>
+                    <td>3</td>
+                    <td>12 each leg</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Hammer Curls</td>
+                    <td>3</td>
+                    <td>12-15</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Day 3: Full Body -->
+        <div id="day3" class="tab-content">
+            <button class="export-btn" onclick="exportToCSV('day3-table', 'Day3_FullBody_Workout.csv')">Export Day 3 to CSV</button>
+            <table id="day3-table">
+                <tr class="workout-header">
+                    <td colspan="8">DAY 3: FULL BODY + CORE</td>
+                </tr>
+                <tr>
+                    <th>Exercise</th>
+                    <th>Target Sets</th>
+                    <th>Target Reps</th>
+                    <th>Weight (lbs)</th>
+                    <th>Set 1</th>
+                    <th>Set 2</th>
+                    <th>Set 3</th>
+                    <th>Set 4</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Thrusters</td>
+                    <td>4</td>
+                    <td>10-12</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Renegade Rows</td>
+                    <td>3</td>
+                    <td>8-10 each</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Step-ups</td>
+                    <td>3</td>
+                    <td>12 each leg</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Dumbbell Swings</td>
+                    <td>4</td>
+                    <td>20</td>
+                    <td><input type="number" class="weight-input" placeholder="15-20"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Mountain Climbers (BW)</td>
+                    <td>3</td>
+                    <td>30 sec</td>
+                    <td>BW</td>
+                    <td><input type="text" class="reps-input" placeholder="time"></td>
+                    <td><input type="text" class="reps-input" placeholder="time"></td>
+                    <td><input type="text" class="reps-input" placeholder="time"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">DB Russian Twists</td>
+                    <td>3</td>
+                    <td>20 each side</td>
+                    <td><input type="number" class="weight-input" placeholder="10-15"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td><input type="number" class="reps-input" placeholder="reps"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+                <tr>
+                    <td class="exercise-name">Plank Hold (BW)</td>
+                    <td>3</td>
+                    <td>30-60 sec</td>
+                    <td>BW</td>
+                    <td><input type="text" class="reps-input" placeholder="time"></td>
+                    <td><input type="text" class="reps-input" placeholder="time"></td>
+                    <td><input type="text" class="reps-input" placeholder="time"></td>
+                    <td>-</td>
+                    <td><input type="text" class="notes-input" placeholder="notes"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Progress Log -->
+        <div id="progress" class="tab-content">
+            <button class="export-btn" onclick="exportToCSV('progress-table', 'Progress_Log.csv')">Export Progress to CSV</button>
+            <table id="progress-table">
+                <tr class="workout-header">
+                    <td colspan="7">PROGRESS TRACKING LOG</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Weight (lbs)</th>
+                    <th>Chest (in)</th>
+                    <th>Waist (in)</th>
+                    <th>Arms (in)</th>
+                    <th>Thighs (in)</th>
+                    <th>Notes/Goals</th>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="date-input"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="number" class="weight-input" step="0.1" placeholder="0.0"></td>
+                    <td><input type="text" class="notes-input" placeholder="weekly goals, feelings, etc."></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="progress-section">
+            <h3>📊 Quick Tips for Using Your Tracker:</h3>
+            <ul>
+                <li><strong>Log immediately after each set</strong> - Don't trust your memory!</li>
+                <li><strong>Track body measurements weekly</strong> - Same day, same time for consistency</li>
+                <li><strong>Export to CSV regularly</strong> - Save your progress to Excel/Google Sheets</li>
+                <li><strong>Aim to beat last week's numbers</strong> - Either more reps or heavier weight</li>
+                <li><strong>Use notes section</strong> - Record how exercises felt, form cues, energy levels</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function exportToCSV(tableId, filename) {
+            try {
+                const table = document.getElementById(tableId);
+                if (!table) {
+                    alert('Table not found!');
+                    return;
+                }
+                
+                const rows = table.getElementsByTagName('tr');
+                let csvContent = '';
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const cells = rows[i].getElementsByTagName('td').length > 0 ? 
+                                  rows[i].getElementsByTagName('td') : 
+                                  rows[i].getElementsByTagName('th');
+                    let row = [];
+                    
+                    for (let j = 0; j < cells.length; j++) {
+                        const cell = cells[j];
+                        const input = cell.querySelector('input');
+                        if (input) {
+                            row.push('"' + (input.value || '') + '"');
+                        } else {
+                            row.push('"' + cell.textContent.replace(/"/g, '""') + '"');
+                        }
+                    }
+                    csvContent += row.join(',') + '\n';
+                }
+                
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                alert('CSV downloaded successfully!');
+            } catch (error) {
+                alert('Error exporting CSV: ' + error.message);
+                console.error('Export error:', error);
+            }
+        }
+
+        // Save data to browser memory (since localStorage isn't available)
+        let workoutData = {};
+
+        function saveWorkoutData() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                workoutData[`input_${index}`] = input.value;
+            });
+        }
+
+        function loadWorkoutData() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                if (workoutData[`input_${index}`]) {
+                    input.value = workoutData[`input_${index}`];
+                }
+            });
+        }
+
+        // Auto-save data when inputs change
+        document.addEventListener('input', saveWorkoutData);
+        
+        // Load data when page loads
+        window.addEventListener('load', loadWorkoutData);
